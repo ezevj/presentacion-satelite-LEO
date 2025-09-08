@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Satélite LEO Orbitando la Tierra</title>
+<style>
+  body { margin: 0; overflow: hidden; background: #000; }
+</style>
+</head>
+<body>
+<script type="module">
+import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.164.1/build/three.module.js";
+
+// === Escena y cámara ===
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(60, window.innerWidth/window.innerHeight, 0.1, 2000);
+camera.position.set(0, 35, 70);
+camera.lookAt(0,0,0);
+
+// === Renderer ===
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setPixelRatio(window.devicePixelRatio);
+document.body.appendChild(renderer.domElement);
+
+// === Iluminación ===
+scene.add(new THREE.AmbientLight(0x404040, 1.5));
+const sunLight = new THREE.DirectionalLight(0xffffff, 2);
+sunLight.position.set(100, 50, 100);
+scene.add(sunLight);
+
+// === Tierra ===
+const earthTexture = new THREE.TextureLoader().load("https://threejs.org/examples/textures/land_ocean_ice_cloud_2048.jpg");
+const earthNormal = new THREE.TextureLoader().load("https://threejs.org/examples/textures/earth_normalmap_2048.jpg");
+const earthSpecular = new THREE.TextureLoader().load("https://threejs.org/examples/textures/earth_specular_2048.jpg");
+
+const earthMat = new THREE.MeshPhongMaterial({
+  map: earthTexture,
+  normalMap: earthNormal,
+  specularMap: earthSpecular,
+  shininess: 10
+});
+
+const earthGeo = new THREE.SphereGeometry(15, 64, 64);
+const earth = new THREE.Mesh(earthGeo, earthMat);
+scene.add(earth);
+
+// === Atmósfera ===
+const atmosphereGeo = new THREE.SphereGeometry(15.3, 64, 64);
+const atmosphereMat = new THREE.MeshBasicMaterial({
+  color: 0x00aaff,
+  transparent: true,
+  opacity: 0.2,
+  side: THREE.BackSide
+});
+scene.add(new THREE.Mesh(atmosphereGeo, atmosphereMat));
+
+// === Estrellas ===
+function createStars() {
+  const starGeo = new THREE.BufferGeometry();
+  const starCount = 2000;
+  const positions = [];
+  for(let i=0;i<starCount;i++){
+    positions.push((Math.random()-0.5)*2000, (Math.random()-0.5)*2000, (Math.random()-0.5)*2000);
+  }
+  starGeo.setAttribute('position', new THREE.Float32BufferAttribute(positions,3));
+  const starMat = new THREE.PointsMaterial({ color:0xffffff, size:0.5 });
+  scene.add(new THREE.Points(starGeo, starMat));
+}
+createStars();
+
+// === Satélite detallado ===
+function createSatellite() {
+  const satellite = new THREE.Group();
+
+  // Cuerpo principal
+  const bodyGeo = new THREE.CylinderGeometry(1.5,1.5,5,32);
+  const bodyMat = new THREE.MeshStandardMaterial({ color:0xaaaaaa, metalness:0.9, roughness:0.2 });
+  const body = new THREE.Mesh(bodyGeo, bodyMat);
+  body.rotation.z = Math.PI/2;
+  satellite.add(body);
+
+  // Paneles solares
+  const panelGeo = new THREE.PlaneGeometry(12, 2);
+  const panelMat = new THREE.MeshStandardMaterial({ color:0x1e40af, emissive:0x112244, metalness:0.6, roughness:0.3, side:THREE.DoubleSide });
+
+  const supportGeo = new THREE.CylinderGeometry(0.08,0.08,7,8);
+  const supportMat = new THREE.MeshStandardMaterial({ color:0x555555 });
+  const support = new THREE.Mesh(supportGeo, supportMat);
+  support.rotation.z = Math.PI/2;
+  satellite.add(support);
+
+  const leftPanel = new THREE.Mesh(panelGeo, panelMat);
+  leftPanel.position.set(-7,0,0);
+  leftPanel.rotation.y = Math.PI/2.5;
+  satellite.add(leftPanel);
+
+  const rightPanel = new THREE.Mesh(panelGeo, panelMat);
+  rightPanel.position.set(7,0,0);
+  rightPanel.rotation.y = -Math.PI/2.5;
+  satellite.add(rightPanel);
+
+  // Antena parabólica
+  const dishGeo = new THREE.SphereGeometry(1,32,32,0,Math.PI);
+  const dishMat = new THREE.MeshStandardMaterial({ color:0xffffff, metalness:0.2, roughness:0.8 });
+  const dish = new THREE.Mesh(dishGeo, dishMat);
+  dish.rotation.x = -Math.PI/3;
+  dish.position.set(0,-2.2,2.5);
+  satellite.add(dish);
+
+  const dishSupportGeo = new THREE.CylinderGeometry(0.08,0.08,2,8);
+  const dishSupport = new THREE.Mesh(dishSupportGeo, supportMat);
+  dishSupport.position.set(0,-1,2.5);
+  satellite.add(dishSupport);
+
+  // Pequeños detalles (cajas o sensores)
+  const sensorGeo = new THREE.BoxGeometry(0.5,0.5,0.5);
+  const sensorMat = new THREE.MeshStandardMaterial({ color:0xff0000, metalness:0.7, roughness:0.3 });
+  const sensor = new THREE.Mesh(sensorGeo, sensorMat);
+  sensor.position.set(1.8,0,1.5);
+  satellite.add(sensor);
+
+  // Propulsores
+  const thrusterGeo = new THREE.CylinderGeometry(0.2,0.4,1,16);
+  const thrusterMat = new THREE.MeshStandardMaterial({ color:0x222222 });
+  for(let i=-1;i<=1;i+=2){
+    const thruster = new THREE.Mesh(thrusterGeo, thrusterMat);
+    thruster.rotation.z = Math.PI/2;
+    thruster.position.set(-2.8,i*0.8,0);
+    satellite.add(thruster);
+  }
+
+  return satellite;
+}
+
+const satellite = createSatellite();
+
+// Grupo de órbita centrado
+const orbitGroup = new THREE.Group();
+orbitGroup.add(satellite);
+satellite.position.set(30,0,0);
+scene.add(orbitGroup);
+
+// === Animación ===
+function animate(){
+  requestAnimationFrame(animate);
+  earth.rotation.y += 0.0008;
+  orbitGroup.rotation.y += 0.002; // satélite orbita
+  renderer.render(scene,camera);
+}
+
+// === Resize ===
+window.addEventListener("resize",()=>{
+  camera.aspect = window.innerWidth/window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+});
+
+animate();
+</script>
+</body>
+</html>
