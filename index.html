@@ -13,6 +13,47 @@
             background: #020617;
             color: #e2e8f0;
         }
+
+        #css-earth {
+            position: fixed;
+            width: 70vh; 
+            height: 70vh; 
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, #96bba0 0%, #5e8964 30%, #3a8cc7 60%, #1e6fa3 100%); 
+            box-shadow: 0 0 60px 10px rgba(59, 130, 246, 0.3), 
+                        inset 0 0 40px rgba(0,0,0,0.8); 
+            z-index: -2;
+            animation: drift-earth 80s linear infinite;
+            overflow: hidden;
+        }
+        
+        #css-earth::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            border-radius: 50%;
+            background: radial-gradient(circle at 20% 80%, white 0%, transparent 12%),
+                        radial-gradient(circle at 75% 30%, white 0%, transparent 18%),
+                        radial-gradient(circle at 50% 50%, white 0%, transparent 10%);
+            background-size: 150% 150%;
+            opacity: 0.1;
+            animation: rotate-clouds 30s linear infinite alternate;
+        }
+
+        @keyframes rotate-clouds {
+            from { transform: rotate(0deg) scale(1.5); }
+            to { transform: rotate(360deg) scale(1.5); }
+        }
+
+        @keyframes drift-earth {
+            0% {
+                transform: translate(110vw, 50vh) scale(1);
+            }
+            100% {
+                transform: translate(-50vw, -50vh) scale(1.2);
+            }
+        }
         
         @keyframes animateStar {
             from { transform: translateY(0px); }
@@ -24,7 +65,7 @@
             left: 0;
             width: 100%;
             height: 2000px;
-            z-index: -2;
+            z-index: -3;
         }
         #stars1 {
             background-image: radial-gradient(1px 1px at 20px 30px, #eee, transparent), radial-gradient(1px 1px at 40px 70px, #fff, transparent), radial-gradient(1px 1px at 50px 160px, #ddd, transparent), radial-gradient(1px 1px at 90px 40px, #fff, transparent), radial-gradient(1px 1px at 130px 80px, #fff, transparent), radial-gradient(1px 1px at 160px 120px, #ddd, transparent);
@@ -37,6 +78,10 @@
             animation: animateStar 120s linear infinite;
         }
 
+        #presentation-container {
+             box-shadow: 0 0 40px rgba(34, 211, 238, 0.15), inset 0 0 10px rgba(34, 211, 238, 0.1);
+        }
+
         .slide {
             display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             transition: opacity 0.6s ease-in-out, transform 0.6s ease-in-out;
@@ -44,7 +89,8 @@
         }
         .slide.active { display: flex; opacity: 1; z-index: 1; transform: scale(1); }
         
-        h1, h2, h3, p, li, span { text-shadow: 0 1px 4px rgba(0,0,0,0.7); }
+        h1, h2, h3 { text-shadow: 0 2px 5px rgba(0,0,0,0.8); }
+        p, li, span { text-shadow: 0 1px 4px rgba(0,0,0,0.7); }
         
         .title-pulse { animation: pulse 3s infinite ease-in-out; }
         @keyframes pulse {
@@ -66,11 +112,29 @@
         .leo-satellite { animation: orbit-leo 15s linear infinite; }
         .geo-satellite { animation: orbit-geo 60s linear infinite; }
 
-        .nav-btn { transition: transform 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease; }
-        .nav-btn:hover { transform: scale(1.1); background-color: #38bdf8; box-shadow: 0 0 20px rgba(56, 189, 248, 0.5); }
-        .info-card { transition: transform 0.3s ease, box-shadow 0.3s ease; }
-        .info-card:hover { transform: translateY(-10px); box-shadow: 0 0 25px rgba(34, 211, 238, 0.4); }
-        .progress-bar-fill { transition: width 0.4s ease-out; box-shadow: 0 0 10px #06b6d4; }
+        .nav-btn {
+            transition: transform 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+            box-shadow: 0 0 10px rgba(56, 189, 248, 0.3);
+        }
+        .nav-btn:hover {
+            transform: scale(1.1);
+            background-color: #38bdf8;
+            box-shadow: 0 0 20px rgba(56, 189, 248, 0.7);
+        }
+        .info-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+            border-color: #334155;
+        }
+        .info-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 0 25px rgba(34, 211, 238, 0.4);
+            border-color: #22d3ee;
+        }
+        .progress-bar-fill {
+            transition: width 0.4s ease-out;
+            box-shadow: 0 0 10px #06b6d4;
+            background: linear-gradient(90deg, #06b6d4, #67e8f9);
+        }
         
         .leo-satellite-body, .geo-satellite-body, .leo-orbit, .geo-orbit { transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease; }
         .orbit-diagram.highlight-leo .leo-satellite-body { transform: scale(1.3); box-shadow: 0 0 15px #67e8f9; }
@@ -92,10 +156,35 @@
             50% { top: -20px; opacity: 0; } 51% { top: 100%; }
             52% { opacity: 1; } 100% { top: 100%; }
         }
+
+        .impact-menu-item {
+            transition: all 0.3s ease;
+            opacity: 0.6;
+        }
+        .impact-menu-item.active, .impact-menu-item:hover {
+            opacity: 1;
+            transform: scale(1.1);
+            background-color: #1e293b;
+        }
+        .impact-menu-item.active {
+             box-shadow: 0 0 20px rgba(34, 211, 238, 0.5);
+        }
+        .impact-content {
+            display: none;
+            animation: content-fade-in 0.5s ease-out;
+        }
+        .impact-content.active {
+            display: block;
+        }
+        @keyframes content-fade-in {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
     </style>
 </head>
 <body class="flex flex-col items-center justify-center h-screen p-4 text-slate-200">
-
+    
+    <div id="css-earth"></div>
     <div id="stars1" class="stars"></div>
     <div id="stars2" class="stars"></div>
 
@@ -150,22 +239,56 @@
                         <p id="leo-text" class="mb-4 text-lg p-3 rounded-lg cursor-pointer hover:bg-slate-700/50"><strong class="text-cyan-400 font-semibold">LEO (Low Earth Orbit):</strong><br> <span class="text-slate-300">Orbitan a 500-2,000 km. Operan en "constelaciones" (redes de cientos o miles).</span></p>
                         <p id="geo-text" class="mb-4 text-lg p-3 rounded-lg cursor-pointer hover:bg-slate-700/50"><strong class="text-amber-400 font-semibold">GEO (Geostationary Orbit):</strong><br> <span class="text-slate-300">Orbitan a 35,786 km. Grandes, fijos y con alta latencia.</span></p>
                     </div>
-                    <img src="https://placehold.co/300x150/0f172a/67e8f9?text=Constelación+de+Satélites+LEO" alt="[Imagen de Constelación de satélites LEO]" class="mt-4 rounded-lg shadow-lg border border-slate-600 self-center">
                 </div>
             </div>
              <p class="text-slate-400 text-sm mt-4 animated-item">Pasa el cursor sobre el texto LEO o GEO</p>
         </div>
         
-        <div class="slide flex-col items-center justify-center text-center p-8 md:p-12" data-slide="5">
+        <div class="slide flex-col items-center justify-center p-8" data-slide="5">
+            <h2 class="text-3xl md:text-4xl font-bold mb-6 animated-item">Visualización de la Órbita</h2>
+            <div class="w-full max-w-4xl h-3/4 bg-slate-900 rounded-lg overflow-hidden shadow-2xl shadow-cyan-500/20 animated-item border-2 border-cyan-700 flex flex-col items-center justify-center p-8 text-center" style="background-image: url('https://placehold.co/1024x576/020617/06b6d4?text=Animación+3D'); background-size: cover; background-position: center;">
+                <div class="bg-black/60 p-8 rounded-lg">
+                    <p class="text-xl text-slate-200 mb-6">Haz clic para abrir la animación 3D de la órbita en una nueva pestaña.</p>
+                    <a href="./satellite_orbit.html" target="_blank" class="bg-cyan-500 hover:bg-cyan-400 text-slate-900 font-bold py-3 px-8 rounded-full text-xl transition-all duration-300 transform hover:scale-110 shadow-lg shadow-cyan-500/50">
+                        Iniciar Animación 3D
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="slide flex-col items-center justify-center text-center p-8 md:p-12" data-slide="6">
             <h2 class="text-3xl md:text-4xl font-bold mb-8 animated-item">Impacto Directo en el Internet Global</h2>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl text-left">
-                <div class="bg-slate-700/80 p-6 rounded-lg info-card animated-item border border-slate-600"><h3 class="text-xl font-bold text-cyan-400 mb-2">Cobertura Total</h3><p>Llegan a zonas rurales, remotas y en desarrollo donde la infraestructura terrestre es inviable.</p></div>
-                <div class="bg-slate-700/80 p-6 rounded-lg info-card animated-item border border-slate-600"><h3 class="text-xl font-bold text-cyan-400 mb-2">Baja Latencia</h3><p>Permiten aplicaciones en tiempo real como videollamadas, juegos en línea y control remoto.</p></div>
-                <div class="bg-slate-700/80 p-6 rounded-lg info-card animated-item border border-slate-600"><h3 class="text-xl font-bold text-cyan-400 mb-2">Resiliencia</h3><p>Ofrecen una conexión vital durante desastres naturales cuando las redes terrestres fallan.</p></div>
+            <div class="w-full max-w-4xl flex flex-col md:flex-row gap-8 animated-item">
+                <div class="flex md:flex-col justify-center gap-4 p-4 rounded-lg bg-slate-900/50 border border-slate-700">
+                    <button class="impact-menu-item active p-4 rounded-lg" data-target="cobertura">
+                        <svg class="h-10 w-10 text-cyan-400 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-1.605.42-3.113 1.157-4.418" /></svg>
+                    </button>
+                    <button class="impact-menu-item p-4 rounded-lg" data-target="latencia">
+                        <svg class="h-10 w-10 text-cyan-400 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                    </button>
+                    <button class="impact-menu-item p-4 rounded-lg" data-target="resiliencia">
+                        <svg class="h-10 w-10 text-cyan-400 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M11.42 15.17L17.25 21A2.652 2.652 0 0021 17.25l-5.877-5.877M11.42 15.17l2.471-2.471a1.125 1.125 0 00-1.59-1.59L9.828 12.879a1.125 1.125 0 000 1.59l2.471 2.471a1.125 1.125 0 001.589 0L17.25 9M11.42 15.17L14.873 11.72a1.125 1.125 0 00-1.59-1.59L9.828 13.589a1.125 1.125 0 000 1.59l1.591 1.59z" /></svg>
+                    </button>
+                </div>
+                <div class="flex-1 bg-slate-900/50 border border-slate-700 rounded-lg p-8 relative overflow-hidden min-h-[300px]">
+                    <div id="cobertura" class="impact-content active">
+                        <h3 class="text-2xl font-bold text-cyan-400 mb-4">Cobertura Total</h3>
+                        <p class="text-lg text-slate-300">Los satélites LEO ofrecen una solución vital para conectar zonas rurales, remotas y en desarrollo, donde desplegar infraestructura terrestre como la fibra óptica es económicamente inviable o geográficamente imposible.</p>
+                    </div>
+                    <div id="latencia" class="impact-content">
+                        <h3 class="text-2xl font-bold text-cyan-400 mb-4">Baja Latencia</h3>
+                        <p class="text-lg text-slate-300">Al estar mucho más cerca de la Tierra, la señal viaja en una fracción del tiempo. Esto es crucial para aplicaciones en tiempo real como videollamadas fluidas, juegos en línea competitivos y el control de maquinaria a distancia.</p>
+                    </div>
+                    <div id="resiliencia" class="impact-content">
+                        <h3 class="text-2xl font-bold text-cyan-400 mb-4">Resiliencia y Emergencias</h3>
+                        <p class="text-lg text-slate-300">Durante desastres naturales como huracanes o terremotos, las redes terrestres a menudo fallan. Los satélites LEO se convierten en una herramienta indispensable para los equipos de rescate, proveyendo una conexión vital e inmediata.</p>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <div class="slide flex-col items-center justify-center p-8 md:p-12" data-slide="6">
+
+        <div class="slide flex-col items-center justify-center p-8 md:p-12" data-slide="7">
             <h2 class="text-3xl md:text-4xl font-bold mb-8 animated-item">Casos Reales y Aplicaciones</h2>
             <div class="w-full max-w-5xl grid grid-cols-2 md:grid-cols-3 gap-6 text-center">
                 <div class="bg-slate-700/80 p-5 rounded-lg info-card animated-item border border-slate-600 flex flex-col items-center justify-center h-40">
@@ -201,7 +324,7 @@
             </div>
         </div>
 
-        <div class="slide flex-col items-center justify-center p-8" data-slide="7">
+        <div class="slide flex-col items-center justify-center p-8" data-slide="8">
             <h2 class="text-3xl md:text-4xl font-bold mb-6 animated-item">Demostración en Vivo</h2>
             <div class="w-full max-w-4xl h-3/4 bg-slate-900 rounded-lg overflow-hidden shadow-2xl shadow-cyan-500/20 animated-item border-2 border-cyan-700 flex flex-col items-center justify-center p-8 text-center" style="background-image: url('https://placehold.co/1024x576/0f172a/67e8f9?text=Vista+Previa+del+Mapa+Satelital'); background-size: cover; background-position: center;">
                 <div class="bg-black/60 p-8 rounded-lg">
@@ -214,18 +337,18 @@
              <p class="text-slate-400 text-sm mt-4 animated-item">Esto abrirá el mapa en tiempo real en una nueva pestaña del navegador.</p>
         </div>
 
-        <div class="slide flex-col items-center justify-center text-center p-8 md-p-12" data-slide="8">
+        <div class="slide flex-col items-center justify-center text-center p-8 md-p-12" data-slide="9">
             <h2 class="text-3xl md:text-4xl font-bold mb-8 animated-item">Conclusión: Un Futuro Conectado</h2>
             <div class="w-full max-w-4xl flex flex-col md:flex-row items-center justify-center gap-12 animated-item">
                 <div class="relative w-48 h-48 flex-shrink-0">
-                    <svg class="w-full h-full text-cyan-800" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm0 18c-4.411 0-8-3.589-8-8s3.589-8 8-8 8 3.589 8 8-3.589 8-8 8z"/><path d="M12.5 7H11v发动机绕线器.5c0 1.103.897 2 2 2s2-.897 2-2-.897-2-2-2zm0 10H11v-5h1.5v5zM12 4c-4.411 0-8 3.589-8 8s3.589 8 8 8 8-3.589 8-8-3.589-8-8-8zm0 14c-3.309 0-6-2.691-6-6s2.691-6 6-6 6 2.691 6 6-2.691 6-6 6z"/></svg>
+                    <svg class="w-full h-full text-cyan-800" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm0 18c-4.411 0-8-3.589-8-8s3.589-8 8-8 8 3.589 8 8-3.589 8-8 8z"/><path d="M12.5 7H11v6.5h1.5V7zm0 10H11v-1.5h1.5v1.5z"/></svg>
                     <div class="absolute top-0 left-0 w-full h-full border-2 border-dashed border-cyan-500 rounded-full animate-spin" style="animation-duration: 20s; animation-direction: reverse;"></div>
                     <div class="absolute top-0 left-0 w-full h-full border border-dashed border-cyan-600 rounded-full animate-spin" style="transform: rotate(60deg) scale(0.75); animation-duration: 15s;"></div>
                     <div class="absolute top-0 left-0 w-full h-full border border-dashed border-cyan-700 rounded-full animate-spin" style="transform: rotate(-60deg) scale(1.25); animation-duration: 25s; animation-direction: reverse;"></div>
                 </div>
                 <ul class="text-left text-lg md:text-xl space-y-4 max-w-lg">
                     <li class="flex items-start bg-slate-700/50 p-3 rounded-lg info-card"><span class="text-cyan-400 mr-4 mt-1 text-2xl">✔</span><span><strong class="font-semibold text-white">Tecnología revolucionaria</strong> que está cerrando la brecha digital global.</span></li>
-                    <li class="flex items-start bg-slate-700/50 p-3 rounded-lg info-card"><span class="text-amber-400 mr-4 mt-1 text-2xl">⚠</span><span>Enfrenta <strong class="font-semibold text-white">desafíos clave</strong> como la basura espacial y la regulación.</span></li>
+                    <li class="flex items-start bg-slate-700/50 p-3 rounded-lg info-card"><span class="text-amber-400 mr-4 mt-1 text-2xl">⚠</span><span>Enfrénta <strong class="font-semibold text-white">desafíos clave</strong> como la basura espacial y la regulación.</span></li>
                     <li class="flex items-start bg-slate-700/50 p-3 rounded-lg info-card"><span class="text-green-400 mr-4 mt-1 text-2xl">🌍</span><span class="font-semibold">El internet verdaderamente global está cada vez más cerca de ser una realidad.</span></li>
                 </ul>
             </div>
@@ -261,6 +384,9 @@
                 slideIndicator.textContent = `Diapositiva ${currentSlide + 1} / ${totalSlides}`;
                 prevBtn.style.display = currentSlide === 0 ? 'none' : 'block';
                 nextBtn.style.display = currentSlide === totalSlides - 1 ? 'none' : 'block';
+                 if (currentSlide === 5) {
+                    setupImpactMenu();
+                }
             }
             function showNextSlide() { if (currentSlide < totalSlides - 1) { currentSlide++; updatePresentation(); } }
             function showPrevSlide() { if (currentSlide > 0) { currentSlide--; updatePresentation(); } }
@@ -277,8 +403,29 @@
                 geoText.addEventListener('mouseenter', () => orbitDiagram.classList.add('highlight-geo'));
                 geoText.addEventListener('mouseleave', () => orbitDiagram.classList.remove('highlight-geo'));
             }
+            
+            function setupImpactMenu() {
+                const menuItems = document.querySelectorAll('.impact-menu-item');
+                const contentItems = document.querySelectorAll('.impact-content');
+
+                menuItems.forEach(item => {
+                    item.addEventListener('click', () => {
+                        const targetId = item.dataset.target;
+
+                        menuItems.forEach(i => i.classList.remove('active'));
+                        item.classList.add('active');
+
+                        contentItems.forEach(content => {
+                            content.classList.toggle('active', content.id === targetId);
+                        });
+                    });
+                });
+            }
+
             updatePresentation();
         });
     </script>
 </body>
 </html>
+
+
